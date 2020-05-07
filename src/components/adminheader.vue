@@ -3,15 +3,19 @@
     <div class="admin-header">
         <div class="admin-header-user">
             <el-popover
+                v-if="this.userName != ''"
                 placement="top-start"
                 trigger="hover">
-                <span style="line-height: 3; font-size: 17px; color: #777; cursor: pointer;" slot="reference">
+                <span v-if="this.userName != ''" style="line-height: 3; font-size: 17px; color: #777; cursor: pointer;" slot="reference">
                     <i class="el-icon-user"/>
                     {{this.userName}}
                 </span>
                 <div class="admin-user-update" @click="updatePassWord()">修改密码</div>
                 <div class="admin-user-logout" @click="logout()">退出</div>
             </el-popover>
+            <span @click="login()" v-if="this.userName === ''" style="line-height: 3; font-size: 17px; color: #777; cursor: pointer;" slot="reference">
+                登录
+            </span>
         </div>
 
         <el-dialog
@@ -48,7 +52,7 @@
 </template>
 
 <script>
-import { updatePassWord } from '@/api/admin/authority/user'
+import { updatePassWord, adminLogout } from '@/api/admin/authority/user'
 export default {
     name: 'adminheader',
     data() {
@@ -79,7 +83,11 @@ export default {
     methods: {
 
         getUser() {
-            this.userName = JSON.parse(localStorage.getItem('userInfo')).username
+            if (JSON.parse(localStorage.getItem('userInfo'))) {
+                this.userName = JSON.parse(localStorage.getItem('userInfo')).username
+            } else {
+                this.userName = ''
+            }
         },
 
         updatePassWord() {
@@ -98,7 +106,10 @@ export default {
                                 type: 'success',
                             });
                             this.loading = false
-                            this.logout()
+                            this.$router.push('/admin/login')
+                            localStorage.removeItem('userInfo')
+                            localStorage.removeItem('token')
+                            localStorage.removeItem('menuList')
                         } else {
                             this.$message({
                                 message: response.data.remsg,
@@ -117,8 +128,26 @@ export default {
             this.editData.password = ''
         },
 
-        logout() {
+        login() {
             this.$router.push('/admin/login')
+        },
+
+        logout() {
+            this.editData.id = JSON.parse(localStorage.getItem('userInfo')).id
+            adminLogout({ id: this.editData.id }).then(response => {
+                if (response.data.recode === 200) {
+                    this.$message({
+                        message: '退出成功！',
+                        type: 'success'
+                    });
+                    this.$router.push('/admin/login')
+                } else {
+                    this.$message({
+                        message: response.data.remsg,
+                        type: 'error',
+                    });
+                }
+            })
             localStorage.removeItem('userInfo')
             localStorage.removeItem('token')
             localStorage.removeItem('menuList')

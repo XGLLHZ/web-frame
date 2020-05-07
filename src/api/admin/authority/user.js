@@ -80,3 +80,12 @@ export function updatePassWord(params) {
     });
 }
 
+//退出登录
+export function adminLogout(params) {
+    return request({
+        method: 'post',
+        url: '/apiadmin/user/logout',
+        data: params
+    });
+}
+

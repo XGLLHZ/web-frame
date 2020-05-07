@@ -8,6 +8,7 @@ import permissionindex from '@/views/admin/authority/permission/index'
 import roleindex from '@/views/admin/authority/role/index'
 import logindex from '@/views/admin/system/log/index'
 import adminlogin from '@/views/admin/login'
+import adminonline from '@/views/admin/system/online/index'
 
 const adminRouters = [
     {
@@ -22,23 +23,28 @@ const adminRouters = [
     },
     {
         name: 'adminuser',
-        path: '/adminuser',
+        path: '/admin/user',
         component: userindex
     },
     {
         name: 'adminrole',
-        path: '/adminrole',
+        path: '/admin/role',
         component: roleindex
     },
     {
         name: 'adminpermission',
-        path: '/adminpermission',
+        path: '/admin/permission',
         component: permissionindex
     },
     {
         name: 'adminlog',
-        path: '/adminlog',
+        path: '/admin/log',
         component: logindex
+    },
+    {
+        name: 'adminonline',
+        path: '/admin/online',
+        component: adminonline
     }
 ]
 

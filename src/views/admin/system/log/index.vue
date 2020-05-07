@@ -68,14 +68,14 @@
                             <span>{{scope.row.userName}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="operateName" label="操作名" min-width="100">
+                    <el-table-column align="center" prop="operateName" label="操作名" min-width="60">
                         <template slot-scope="scope">
                             <span @click="getInfo(scope.row.id)" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #409EFF; cursor: pointer;">
                                 {{scope.row.operateName}}
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="requestApi" label="请求API" min-width="100" show-overflow-tooltip>
+                    <el-table-column align="center" prop="requestApi" label="请求API" min-width="60" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                                 {{scope.row.requestApi}}
@@ -87,7 +87,7 @@
                             <span>{{scope.row.requestTime}} ms</span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="logType" label="日志类型" min-width="50">
+                    <el-table-column align="center" prop="logType" label="日志类型" min-width="60">
                         <template slot-scope="scope">
                             <div v-if="scope.row.logType === 1">
                                 <span style="color: #606266">{{logTypes[scope.row.logType]}}</span>
@@ -97,7 +97,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="requestIp" label="IP" min-width="70" show-overflow-tooltip>
+                    <el-table-column align="center" prop="requestIp" label="IP" min-width="60" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                                 {{scope.row.requestIp}}
@@ -111,14 +111,14 @@
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="browser" label="浏览器" min-width="80" show-overflow-tooltip>
+                    <el-table-column align="center" prop="browser" label="浏览器" min-width="60" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                                 {{scope.row.browser}}
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="createTime" label="日志时间" min-width="80">
+                    <el-table-column align="center" prop="createTime" label="日志时间" min-width="60">
                         <template slot-scope="scope">
                             <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                                 {{scope.row.createTime}}
