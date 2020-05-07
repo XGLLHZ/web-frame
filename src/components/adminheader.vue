@@ -13,7 +13,7 @@
                 <div class="admin-user-update" @click="updatePassWord()">修改密码</div>
                 <div class="admin-user-logout" @click="logout()">退出</div>
             </el-popover>
-            <span @click="login()" v-if="this.userName === ''" style="line-height: 3; font-size: 17px; color: #777; cursor: pointer;" slot="reference">
+            <span class="admin-header-login" @click="login()" v-if="this.userName === ''" slot="reference">
                 登录
             </span>
         </div>
@@ -184,6 +184,15 @@ export default {
     color: #409EFF;
 }
 .admin-user-logout:hover {
+    color: #409EFF;
+}
+.admin-header-login {
+    line-height: 3;
+    font-size: 17px;
+    color: #777; 
+    cursor: pointer;
+}
+.admin-header-login:hover {
     color: #409EFF;
 }
 
