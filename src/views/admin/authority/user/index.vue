@@ -63,7 +63,9 @@
                     <el-table-column align="center" fixed="right" label="操作" width="150">
                         <template slot-scope="scope">
                             <span style="text-decoration: none; color: #409EFF; cursor: pointer;" @click="openEditDialog(scope.row.id)">编辑</span>
-                            <span style="text-decoration: none; color: #409EFF; cursor: pointer;" @click="deleteUsuer(scope.row.id)">删除</span>
+                            <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="deleteUser(scope.row.id)">
+                                <span style="text-decoration: none; color: #409EFF; cursor: pointer;" slot="reference">删除</span>
+                            </el-popconfirm>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -344,7 +346,7 @@ export default {
         },
 
         //删除
-        deleteUsuer(id) {
+        deleteUser(id) {
             this.loading = true
             deleteUser({ id: id }).then(response => {
                 if (response.data.recode == 200) {

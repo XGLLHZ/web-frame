@@ -1,33 +1,27 @@
-<!-- admin 系统-日志 -->
+
+<!-- admin 博客 -->
 <template>
-    <div class="admin-log">
+    <div class="admin-blog">
         <adminaside></adminaside>
         <adminheader></adminheader>
-        <div class="admin-log-main">
-            <div class="log-search">
+        <div class="admin-blog-main">
+            <div class="blog-search">
                 <el-row :gutter="24">
-                    <el-col :span="6">
-                        <el-date-picker
-                        v-model="queryParams.searchTime"
-                        type="daterange"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd HH:mm:ss"
-                        style="width:100%"
-                        size="small">
-                        </el-date-picker>
-                    </el-col>
                     <el-col :span="4">
-                        <el-select size="small" v-model="queryParams.logType" placeholder="日志类型">
+                        <el-select size="small" v-model="queryParams.blogType" placeholder="文章分类">
                             <el-option 
-                            v-for="item in logTypeOptions"
+                            v-for="item in blogTypeOptions"
                             :key="item.key"
                             :value="item.key"
                             :label="item.value">
                             </el-option>
                         </el-select>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-input size="small" v-model="queryParams.blogTitle" placeholder="请输入标题" clearable></el-input>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-input size="small" v-model="queryParams.blogAuthor" placeholder="请输入作者" clearable></el-input>
                     </el-col>
                     <el-col :span="2">
                         <el-button style="width:100%; border: none" type="primary" size="small" @click="search()">搜索</el-button>
@@ -37,10 +31,10 @@
                     </el-col>
                 </el-row>
             </div>
-            <div class="log-botton">
+            <div class="blog-botton">
                 <el-row :gutter="24">
                     <el-col :span="2">
-                        <router-link :to="{ path: '/blogedit', query: { onType: 'insert', id: id } }">
+                        <router-link :to="{ path: '/admin/blog/edit', query: { onType: 'insert' } }">
                             <el-button style="width:100%; border: none" size="small" type="primary">新增</el-button>
                         </router-link>
                     </el-col>
@@ -55,7 +49,7 @@
                     </el-col>
                 </el-row>
             </div>
-            <div class="log-table">
+            <div class="blog-table">
                 <el-table
                 :data="dataList"
                 stripe
@@ -63,71 +57,55 @@
                 style="width: 100%">
                     <el-table-column align="center" min-width="5" type="selection"/>
                     <el-table-column align="center" min-width="5" label="序号" type="index" fixed="left"/>
-                    <el-table-column align="center" prop="userName" label="用户名" min-width="60">
+                    <el-table-column align="left" prop="blogTitle" label="文章标题" min-width="100" show-overflow-tooltip>
                         <template slot-scope="scope">
-                            <span>{{scope.row.userName}}</span>
+                            <!-- <router-link :to="{ path: '/admin/blog/info', query: { id: scope.row.id } }" style="text-decoration: none;"> -->
+                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #409EFF; cursor: pointer;">
+                                    {{scope.row.blogTitle}}
+                                </span>
+                            <!-- </router-link> -->
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="operateName" label="操作名" min-width="60">
+                    <el-table-column align="center" prop="blogAuthor" label="作者" min-width="60">
                         <template slot-scope="scope">
-                            <span @click="getInfo(scope.row.id)" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #409EFF; cursor: pointer;">
-                                {{scope.row.operateName}}
+                            <span>{{scope.row.blogAuthor}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" prop="blogType" label="文章分类" min-width="60">
+                        <template slot-scope="scope">
+                            <span>{{blogTypes[scope.row.blogType]}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" prop="readNumber" label="阅读人数" min-width="60">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.readNumber}} 人</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" prop="commentNumber" label="评论人数" min-width="60">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.commentNumber}} 人</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" prop="createTime" label="发表时间" min-width="60" show-overflow-tooltip>
+                        <template slot-scope="scope">
+                            <span  style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                {{ scope.row.createTime }}
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="requestApi" label="请求API" min-width="60" show-overflow-tooltip>
+                    <el-table-column align="center" fixed="right" label="操作" min-width="90">
                         <template slot-scope="scope">
-                            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                {{scope.row.requestApi}}
-                            </span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" prop="requestTime" label="请求耗时" min-width="60">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.requestTime}} ms</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" prop="logType" label="日志类型" min-width="60">
-                        <template slot-scope="scope">
-                            <div v-if="scope.row.logType === 1">
-                                <span style="color: #606266">{{logTypes[scope.row.logType]}}</span>
-                            </div>
-                            <div v-if="scope.row.logType === 2">
-                                <span style="color: red">{{logTypes[scope.row.logType]}}</span>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" prop="requestIp" label="IP" min-width="60" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                {{scope.row.requestIp}}
-                            </span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" prop="address" label="IP来源" min-width="60" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                {{scope.row.address}}
-                            </span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" prop="browser" label="浏览器" min-width="60" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                {{scope.row.browser}}
-                            </span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" prop="createTime" label="日志时间" min-width="60" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                {{scope.row.createTime}}
-                            </span>
+                            <router-link style="text-decoration: none; color: #409EFF" :to="{ path: '/admin/blog/edit', query: { onType: 'update', id: scope.row.id } }">
+                                编辑
+                            </router-link>
+                            <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="deleteBlog(scope.row.id)">
+                                <span style="text-decoration: none; color: #409EFF; cursor: pointer;" slot="reference">删除</span>
+                            </el-popconfirm>
                         </template>
                     </el-table-column>
                 </el-table>
                 <!--分页-->
-                <div class="log-page">
+                <div class="blog-page">
                     <el-pagination
                         style="text-align: center"
                         layout="total, sizes, prev, pager, next, jumper"
@@ -142,32 +120,15 @@
             </div>
         </div>
 
-        <el-dialog
-            title="日志详情"
-            :visible.sync="dialogVisible"
-            width="80%"
-            top="5%"
-            @close="closeDialog()"
-            v-loading="loading">
-            <span>
-                <div>方法名:</div>
-                <div>{{className}}</div>
-                <div>请求参数:</div>
-                <div>{{requestParams}}</div>
-                <div>异常详情:</div>
-                <div>{{exceptionDetail}}</div>
-            </span>
-        </el-dialog>
-
     </div>
 </template>
 
 <script>
 import adminaside from '@/components/adminaside'
 import adminheader from '@/components/adminheader'
-import { getLogList, getLogInfo } from '@/api/admin/system/log'
+import { getList, deleteBlog } from '@/api/admin/blog'
 export default {
-    name: 'adminlog',
+    name: 'adminblog',
     components: {
         adminaside,
         adminheader
@@ -176,25 +137,25 @@ export default {
         return {
             loading: false,
             exportLoading: false,
-            dialogVisible: false,
             id: '',
-            dataList: [],
             total: 0,
+            dataList: [],
             queryParams: {
                 currentPage: 1,
                 pageSize: 10,
-                logType: '',
-                searchTime: []
+                blogType: '',
+                blogTitle: '',
+                blogAuthor: ''
             },
-            logTypes: [ '全部', '正常', '异常'],
-            logTypeOptions: [
+            blogTypes: ['全部', 'Java', 'Spring Boot', 'Spring Cloud', 'Python', 'Story'],
+            blogTypeOptions: [
                 { key: 0, value: '全部' },
-                { key: 1, value: '正常' },
-                { key: 2, value: '异常' }
-            ],
-            className: '',
-            requestParams: '',
-            exceptionDetail: ''
+                { key: 1, value: 'Java' },
+                { key: 2, value: 'Spring Boot' },
+                { key: 3, value: 'Spring Cloud' },
+                { key: 4, value: 'Python' },
+                { key: 5, value: 'Story' }
+            ]
         }
     },
 
@@ -206,7 +167,7 @@ export default {
         //列表
         getList() {
             this.loading = true
-            getLogList(this.queryParams).then(response => {
+            getList(this.queryParams).then(response => {
                 this.dataList = response.data.body.dataList
                 this.total = response.data.body.total
                 this.loading = false
@@ -225,27 +186,24 @@ export default {
         clear() {
             this.queryParams.currentPage = 1,
             this.queryParams.pageSize = 10,
-            this.queryParams.searchTime = []
-            this.queryParams.logType = ''
+            this.queryParams.blogType = '',
+            this.queryParams.blogTitle = '',
+            this.queryParams.blogAuthor = ''
             this.loading = true
             this.getList()
         },
 
-        //详情
-        getInfo(id) {
-            this.dialogVisible = true
-            getLogInfo({ id: id }).then(response => {
-                this.className = response.data.body.dataInfo.className
-                this.requestParams = response.data.body.dataInfo.requestParams
-                this.exceptionDetail = response.data.body.dataInfo.exceptionDetail
-                this.loading = false
-            }).catch(() => {
-                this.loading = false
-            });
-        },
-
-        closeDialog() {
-            this.dialogVisible = false
+        //查看详情
+        getblogInfo(id) {
+            getblogInfo({ id: id }).then(response => {
+                this.editData = response.data.body.dataInfo
+                this.editData.permIds = []
+                var list = response.data.body.dataInfo.list
+                for (let i = 0; i < list.length; i++) {
+                    this.editData.permIds.push(list[i].permName)
+                }
+            })
+            this.infoDialogVisible = true
         },
 
         //删除
@@ -259,6 +217,7 @@ export default {
                         type: 'success',
                         position: 'top-right'
                     });
+                    this.getList();
                 } else {
                     this.$notify({
                         title: '错误',
@@ -266,9 +225,9 @@ export default {
                         type: 'error',
                         position: 'top-right'
                     });
+                    this.loading = false
                 }
             }).catch({});
-            this.getList();
         },
 
         //导出
@@ -313,21 +272,21 @@ export default {
 </script>
 
 <style>
-.admin-log {
+.admin-blog {
     width: 100%;
 }
-.admin-log-main {
+.admin-blog-main {
     width: 81%;
     margin: 10px 2% 10px 16%;
     padding: 10px;
 }
-.log-botton {
+.blog-botton {
     padding-top: 10px;
 }
-.log-table {
+.blog-table {
     padding-top: 10px;
 }
-.log-page {
+.blog-page {
     padding-top: 10px;
 }
 
