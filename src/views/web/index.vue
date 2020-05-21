@@ -1,62 +1,97 @@
-<!-- web 首页 -->
+<!-- 首页 -->
 <template>
-  <div class="index">
-    <homenav></homenav>
-    <div class="con">
-      <div class="content">
-        <div class="con-left">
-          <div class="left-li" v-for="item in dataList" v-loading="loading" :key="item.id">
-            <div class="li-title">
-              <router-link :to="{ path: '/info', query: { id: item.id } }">{{ item.blogTitle }}</router-link>
+    <div class="index">
+        <div class="index-homenav">
+            <div class="nav-menu">
+                <el-row style="width: 100%; height: 100%;" :gutter="24">
+                    <el-col class="nav-col" :span="11">
+                        <span @click="index(0)" style="text-decoration: none;" class="nav-one" to="/">
+                            <span style="color:yellow">0_0 </span>
+                                XGLLHZ
+                        </span>
+                    </el-col>
+                    <el-col :span="2">
+                        <span class="nav-two" @click="index(0)">Home</span>
+                    </el-col>
+                    <el-col :span="2.2">
+                        <span class="nav-two" @click="index(1)">Java</span>
+                    </el-col>
+                    <el-col :span="2.2">
+                        <span class="nav-two" @click="index(2)">Spring Boot</span>
+                    </el-col>
+                    <el-col :span="2.2">
+                        <span class="nav-two" @click="index(3)">Spring Cloud</span>
+                    </el-col>
+                    <el-col :span="2.2">
+                        <span class="nav-two" @click="index(4)">Python</span>
+                    </el-col>
+                    <el-col :span="2.2">
+                        <span class="nav-two" @click="index(5)">Story</span>
+                    </el-col>
+                </el-row>
+                <!-- <div class="nav-one">
+                    <router-link to="/"><span style="color:yellow">0_0 </span>XGLLHZ</router-link>
+                </div>
+                <div class="nav-two">
+                    <ul>
+                        <li><router-link :to="{ path: '/', query: { blogType: 5 } }">Story</router-link></li>
+                        <li><router-link :to="{ path: '/', query: { blogType: 4 } }">Python</router-link></li>
+                        <li><router-link :to="{ path: '/', query: { blogType: 2 } }">Spring Cloud</router-link></li>
+                        <li><router-link :to="{ path: '/', query: { blogType: 1 } }">Spring Boot</router-link></li>
+                        <li><router-link :to="{ path: '/', query: { blogType: 3 } }">Java</router-link></li>
+                        <li><router-link :to="{ path: '/', query: { blogType: 0 } }">Home</router-link></li>
+                    </ul>
+                </div> -->
             </div>
-            <div class="li-info">{{item.blogTitle}}</div>
-            <div class="li-footer">
-              <span>{{ item.updateTime }}&nbsp;&nbsp;</span>
-              <span>阅读数 {{ item.readNumber }}&nbsp;&nbsp;</span>
-              <span>评论数 {{ item.commentNumber }}</span>
-            </div>
-          </div>
         </div>
-        <div class="con-right">
-          <div class="right-one">
-            <span><a href="https://github.com/XGLLHZ"><img src="../../assets/github.png" style="width:14%; margin-left:25%"/></a></span>
-            <span><a href="https://blog.csdn.net/XGLLHZ"><img src="../../assets/csdn.png" style="width:14%; margin-left:4%"/></a></span>
-            <span><router-link to="/"><img src="../../assets/sina.png" style="width:14%; margin-left:4%"/></router-link></span>
-          </div>
-          <!-- <div class="right-two">
-            <span>精选文章</span>
-          </div>
-          <div class="right-three">
-            <div class="right-three-con">
-              <div class="three-one">spring cloud 架构</div>
-              <div class="three-two">深度剖析 spring cloud 架构 你像窝在被子里的舒服</div>
+        <div class="index-bg"></div>
+        <div class="index-main">
+            <div class="main-con" v-loading="loading">
+                <el-row style="width: 100%;" :gutter="24">
+                    <el-col :span="18" >
+                        <div class="blog-con" v-for="(item, index) in dataList" :key="index">
+                            <div style="margin: 20px 10px 10px 0px">
+                                <router-link :to="{ path: '/index/info', query: { id: item.id } }" class="blog-title">{{ item.blogTitle }}</router-link>
+                            </div>
+                            <div class="blog-time">
+                                <span>{{ item.updateTime }}&nbsp;&nbsp;</span>
+                                <span>阅读数 {{ item.readNumber }}&nbsp;&nbsp;</span>
+                                <!-- <span>评论数 {{ item.commentNumber }}</span> -->
+                            </div>
+                        </div>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-row :gutter="24">
+                            <el-col :span="8">
+                                <a href="https://github.com/XGLLHZ"><img style="width: 70%" src="../../assets/github.png"/></a>
+                            </el-col>
+                            <el-col :span="8">
+                                <a href="https://blog.csdn.net/XGLLHZ"><img style="width: 75%" src="../../assets/csdn.png"/></a>
+                            </el-col>
+                            <el-col :span="8">
+                                <a href="https://github.com/XGLLHZ"><img style="width: 70%" src="../../assets/sina.png"/></a>
+                            </el-col>
+                        </el-row>
+                    </el-col>
+                </el-row>
             </div>
-            <div class="right-three-con">
-              <div class="three-one">spring cloud 架构</div>
-              <div class="three-two">深度剖析 spring cloud 架构 你像窝在被子里的舒服</div>
-            </div>
-            <div class="right-three-con">
-              <div class="three-one">spring cloud 架构</div>
-              <div class="three-two">深度剖析 spring cloud 架构 你像窝在被子里的舒服</div>
-            </div>
-          </div> -->
         </div>
-      </div>
+        <div class="index-footer">
+            <div>
+                <img style="width: 15%" src="../../assets/gongzhonghao.jpeg"/>
+            </div>
+            <div><span>扫描微信二维码&nbsp;&nbsp;关注公众号 人世间子</span></div>
+            <div class="footer-footer">
+                <div><router-link class="footer-a"  to="/">津ICP备18006982号-1</router-link></div>
+            </div>
+        </div>
     </div>
-    <homefooter></homefooter>
-  </div>
 </template>
 
 <script>
-import homenav from '@/components/homenav'
-import homefooter from '@/components/homefooter'
 import { getList } from '@/api/web/index'
 export default {
     name: 'index',
-    components: {
-        homenav,
-        homefooter
-    },
 
     data() {
         return {
@@ -68,127 +103,108 @@ export default {
     },
 
     created() {
-      this.getLists()
+        this.getLists(0)
     },
 
     methods: {
+
         //列表
-        getLists() {
-            this.blogType = this.$route.query.blogType
-            getList({ blogType: this.blogType }).then(response => {
+        getLists(type) {
+            this.loading = true
+            getList({ blogType: type }).then(response => {
                 this.dataList = response.data.body.dataList
                 this.loading = false
             }).catch(() => {
                 this.loading = false
             });
         },
+
+        index(type) {
+            this.getLists(type)
+        }
+
     }
 
 }
 </script>
 
-<style>
+<style scoped>
 .index {
-  width: 100%;
+    width: 100%;
+    height: 100%;
+    margin: 0%;
 }
-.con {
-  margin-top: 40px;
-  width: 100%;
-  height: 800px;
+.index-homenav {
+    width: 100%;
+    height: 80px;
+    background-color: #181818;
 }
-.content {
-  margin: 0px 10% 0px 10%;
-  width: 80%;
+.nav-menu {
+    margin: 0px 10% 0px 10%;
+    width: 80%;
+    height: 100%;
 }
-.con-left {
-  float: left;
-  width: 70%;
+.nav-one {
+    width: 100%;
+    height: 100%;
+    color: #ffffff;
+    font-size: 38px;
+    line-height: 80px;
 }
-.con-right {
-  float: right;
-  width: 30%;
+.nav-two {
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 80px;
 }
-.left-li {
-  width: 95%;
-  height: 150px;
-  border-bottom: 1px solid #ddd;
+.nav-menu span:hover {
+    color: yellow;
+    border-bottom: 4px solid yellow;
+    cursor: pointer;
 }
-.li-title {
-  margin-left: 5px;
-  width: 100%;
-  height: 85px;
-  font-size: 23px;
-  font-family: 'SimHei';
-  line-height: 100px;
+.index-bg {
+    width: 100%;
+    height: 315px;
+    background-image: url('../../assets/bg.png');
 }
-.li-title a {
-  color: peru;
-  text-decoration: none;
+.index-main {
+    width: 100%;
 }
-.li-info {
-  margin-left: 5px;
-  margin-right: 5px;
-  width: 100%;
-  height: 35px;
-  color: #777;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.main-con {
+    margin: 0px 10% 0px 10%;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    width: 80%;
 }
-.li-footer {
-  margin-left: 5px;
-  width: 100%;
-  height: 30px;
-  color: #999;
-  font-size: 13px;
+.blog-con {
+    border-bottom: 1px solid #ddd;
 }
-.li-title a:hover {
-  border-bottom: 4px solid peru;
+.blog-title {
+    font-size: 23px;
+    color: peru;
+    text-decoration: none;
 }
-.right-one {
-  width: 100%;
-  height: 60px;
+.blog-time {
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #999;
 }
-.right-one img:hover {
-  opacity: 0.8;
+.index-footer {
+    width: 100%;
+    text-align: center;
 }
-.right-two {
-  width: 100%;
-  height: 40px;
-  text-align: center
+.footer-footer {
+    margin-top: 40px;
+    width: 100%;
+    height: 150px;
+    background-color: #181818;
 }
-.right-two span {
-  font-size: 25px;
+.footer-a {
+    text-decoration: none; 
+    color:gray; 
+    line-height: 70px;
 }
-.right-three {
-  margin-top: 5px;
-  width: 100%;
-}
-.right-three-con {
-  margin-bottom: 30px;
-  width: calc(100% - 4px);
-  height: 146px;
-  border-radius: 10px;
-  background-image: url('../../assets/springcloud.jpg');
-  background-repeat: no-repeat;
-  border: 2px solid #ffffff;
-}
-.three-one {
-  width: 100%;
-  height: 40%;
-  color: #ffffff;
-  font-size: 25px;
-  text-align: center;
-  line-height: 60px;
-}
-.three-two {
-  width: 100%;
-  height: 60%;
-  color: #ffffff;
-  text-align: center;
-  line-height: 40px
-}
-.right-three-con:hover {
-  border: 2px solid peru;
+.footer-footer a:hover {
+    color: peru;
 }
 </style>
+

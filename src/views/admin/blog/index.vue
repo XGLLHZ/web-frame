@@ -59,11 +59,11 @@
                     <el-table-column align="center" min-width="5" label="序号" type="index" fixed="left"/>
                     <el-table-column align="left" prop="blogTitle" label="文章标题" min-width="100" show-overflow-tooltip>
                         <template slot-scope="scope">
-                            <!-- <router-link :to="{ path: '/admin/blog/info', query: { id: scope.row.id } }" style="text-decoration: none;"> -->
+                            <router-link :to="{ path: '/admin/blog/info', query: { id: scope.row.id } }" style="text-decoration: none;">
                                 <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #409EFF; cursor: pointer;">
                                     {{scope.row.blogTitle}}
                                 </span>
-                            <!-- </router-link> -->
+                            </router-link>
                         </template>
                     </el-table-column>
                     <el-table-column align="center" prop="blogAuthor" label="作者" min-width="60">

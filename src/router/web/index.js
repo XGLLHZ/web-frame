@@ -6,7 +6,7 @@ import info from '@/views/web/info'
 
 const webRouters = [
     {
-        path: '/info',
+        path: '/index/info',
         name: 'info',
         component: info
     }
