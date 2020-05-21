@@ -13,6 +13,7 @@ import adminblog from '@/views/admin/blog/index'
 import blogedit from '@/views/admin/blog/edit'
 import adminmd from '@/views/admin/component/md'
 import admineditor from '@/views/admin/component/editor'
+import adminchat from '@/views/admin/component/chat'
 
 const adminRouters = [
     {
@@ -69,6 +70,11 @@ const adminRouters = [
         name: 'admineditor',
         path: '/admin/component/editor',
         component: admineditor
+    },
+    {
+        name: 'adminchat',
+        path: '/admin/component/chat',
+        component: adminchat
     }
 ]
 
