@@ -82,7 +82,20 @@
             </div>
             <div><span>扫描微信二维码&nbsp;&nbsp;关注公众号 人世间子</span></div>
             <div class="footer-footer">
-                <div><router-link class="footer-a"  to="/">津ICP备18006982号-1</router-link></div>
+                <div>
+                </div>
+                <div>
+                    <span>
+                        <span>
+                            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=62082202000006" style="display:inline-block;text-decoration:none;height:16px;line-height:20px;">
+                                <img src="../../assets/beian.png" style="float:left;"/>
+                                <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:gray;">甘公网安备 62082202000006号</p>
+                            </a>
+                        </span>
+                    </span>
+                    <span style="color: gray">|</span>
+                    <span><a target="_blank" class="footer-a"  href="http://www.beian.gov.cn">津ICP备18006982号-1</a></span>
+                </div>
             </div>
         </div>
     </div>
