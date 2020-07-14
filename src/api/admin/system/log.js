@@ -22,6 +22,15 @@ export function getLogInfo(params) {
     });
 }
 
+//导出
+export function exportLog(params) {
+    return request({
+        method: 'post',
+        url: '/apiadmin/log/export',
+        data: params
+    });
+}
+
 
 
 

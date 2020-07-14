@@ -165,7 +165,7 @@
 <script>
 import adminaside from '@/components/adminaside'
 import adminheader from '@/components/adminheader'
-import { getLogList, getLogInfo } from '@/api/admin/system/log'
+import { getLogList, getLogInfo, exportLog } from '@/api/admin/system/log'
 export default {
     name: 'adminlog',
     components: {
@@ -274,7 +274,7 @@ export default {
         //导出
         exportExcel() {
             this.exportLoading = true
-            exportBlog({ fileTitle: "博客信息表" }).then(response => {
+            exportLog(this.queryParams).then(response => {
                 if (response.data.recode == 200) {
                     this.$notify({
                         title: '成功',
