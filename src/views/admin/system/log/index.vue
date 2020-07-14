@@ -51,7 +51,10 @@
                         <el-button style="width:100%; border: none" size="small" type="danger" @click="search()">删除</el-button>
                     </el-col>
                     <el-col :span="2">
-                        <el-button style="width:100%; border: none" size="small" type="success" v-loading="exportLoading" @click="exportExcel()">导出</el-button>
+                        <el-button style="width:100%; border: none" size="small" type="success" v-loading="importLoading" @click="importLog()">导入</el-button>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button style="width:100%; border: none" size="small" type="success" v-loading="exportLoading" @click="exportLog()">导出</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -159,13 +162,29 @@
             </span>
         </el-dialog>
 
+        <el-dialog
+            title="导入日志"
+            :visible.sync="importDialogVisible"
+            width="40%"
+            top="5%"
+            @close="closeImportDialog()"
+            v-loading="loading">
+            <el-row style="margin-left:10%" :gutter="12">
+                <input type="file" @change="getFile($event)" size="small" placeholder="请选择文件"/>
+            </el-row>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="importDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submit()" v-loading="importLoading">确 定</el-button>
+            </span>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
 import adminaside from '@/components/adminaside'
 import adminheader from '@/components/adminheader'
-import { getLogList, getLogInfo, exportLog } from '@/api/admin/system/log'
+import { getLogList, getLogInfo, exportLog, importLog } from '@/api/admin/system/log'
 export default {
     name: 'adminlog',
     components: {
@@ -175,8 +194,10 @@ export default {
     data() {
         return {
             loading: false,
+            importLoading: false,
             exportLoading: false,
             dialogVisible: false,
+            importDialogVisible: false,
             id: '',
             dataList: [],
             total: 0,
@@ -194,7 +215,8 @@ export default {
             ],
             className: '',
             requestParams: '',
-            exceptionDetail: ''
+            exceptionDetail: '',
+            file: {}
         }
     },
 
@@ -271,27 +293,79 @@ export default {
             this.getList();
         },
 
-        //导出
-        exportExcel() {
-            this.exportLoading = true
-            exportLog(this.queryParams).then(response => {
+        //打开导入对话框
+        importLog() {
+            this.importDialogVisible = true
+        },
+
+        closeImportDialog() {
+            this.importDialogVisible = false
+            this.file = {}
+        },
+
+        getFile(event) {
+            this.file = event.target.files[0];
+            console.log(event)
+        },
+
+        submit() {
+            console.log(this.file)
+            this.importLoading = true
+            var data = new FormData()
+            data.append('file', this.file)
+            importLog(data).then(response => {
                 if (response.data.recode == 200) {
                     this.$notify({
                         title: '成功',
-                        message: '导出成功！',
+                        message: '导入成功！',
                         type: 'success',
                         position: 'top-right'
                     });
-                    this.exportLoading = false
                 } else {
                     this.$notify({
                         title: '错误',
-                        message: response.data.body.remsg,
+                        message: '导入失败！',
                         type: 'error',
                         position: 'top-right'
                     });
+                }
+            }).catch(err => {
+                this.$notify({
+                    title: '错误',
+                    message: '导入失败！',
+                    type: 'error',
+                    position: 'top-right'
+                });
+            });
+            this.importLoading = false
+            this.importDialogVisible = false
+        },
+
+        //导出
+        exportLog() {
+            this.exportLoading = true
+            exportLog(this.queryParams).then(response => {
+                if (response.status === 200) {
+                    //将文件流转成blob形式
+                    var url = window.URL.createObjectURL(new Blob([response.data],{type:"application/vnd.ms-excel;charset=utf-8"}));
+                    //创建一个超链接，将文件流赋进去，并实现这个超链接的单击事件
+                    var link = document.createElement('a');
+                    link.href = url;
+                    var fileName = "系统日志.xls";
+                    link.setAttribute('download', fileName);
+                    document.body.appendChild(link);
+                    link.click();
+                    URL.revokeObjectURL(link.href)   //释放 url 对象
+                    document.body.removeChild(link)
                     this.exportLoading = false
                 }
+            }).catch(() => {
+                this.$notify({
+                    title: '错误',
+                    message: '导出失败！',
+                    type: 'error',
+                    position: 'top-right'
+                });
             });
         },
 

@@ -27,6 +27,19 @@ export function exportLog(params) {
     return request({
         method: 'post',
         url: '/apiadmin/log/export',
+        data: params,
+        responseType: 'arraybuffer'   //返回结果为二进制
+    });
+}
+
+//导入
+export function importLog(params) {
+    return request({
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        method: 'post',
+        url: '/apiadmin/log/import',
         data: params
     });
 }
